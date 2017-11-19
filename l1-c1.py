@@ -1,4 +1,5 @@
 import unicodecsv
+import matplotlib.pyplot as plt
 import numpy as np
 from collections import defaultdict
 from datetime import datetime as dt
@@ -367,3 +368,13 @@ print("non passed completed lessons in week:\nmean : {}, standard deviation : {}
 		 np.min(completed_lessons_non_passed) 
 		 )
 	)
+#Ph4 visualizing data
+plt.plot(total_minutes_visited_passed_engagement)
+plt.plot(total_minutes_visited_non_passed_engagement)
+plt.show()
+plt.plot(visited_classroom_passed)
+plt.plot(visited_classroom_non_passed)
+plt.show()
+plt.plot(completed_lessons_passsed)
+plt.plot(completed_lessons_non_passed)
+plt.show()
