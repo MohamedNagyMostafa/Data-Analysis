@@ -99,7 +99,7 @@ def filter_paid_student(enrollments):
 
 def during_first_week(join_student_date, engagement_date):
 	time_delta = engagement_date - join_student_date
-	return  time_delta.days < 7 
+	return  time_delta.days < 7 and time_delta.days >= 0
 
 def filter_engagement_paid_first_week(paid_student, daily_engagement):
 	paid_student_first_week = []
@@ -130,6 +130,23 @@ def total_average_for_mints(student_data):
 	for student_account in student_data:
 		total_average = total_average + student_data[student_account]
 	return total_average/ len(student_data)
+
+def student_detection_problem(paid_student_engagement_first_week_total_mints):
+	mints_in_week = 10080
+	student_detected = set()
+	for account_key, total_mint in paid_student_engagement_first_week_total_mints.items():
+		if total_mint > mints_in_week:
+			student_detected.add(account_key)
+	return student_detected
+
+def student_rows_total_mint_error(paid_student_engagement_first_week_student):
+	error_rows = []
+	mints_in_day = 1440
+	for row in paid_student_engagement_first_week_student:
+		if row['total_minutes_visited'] > mints_in_day:
+			error_rows.append(row)
+	return error_rows
+
 # Wrangling Phase Ph.1
 enrollment = read_csv('E:\Data Analysis\c-ud170\enrollments.csv')
 daily_engagement = read_csv('E:\Data Analysis\c-ud170\daily_engagement.csv')
@@ -206,3 +223,14 @@ print("mean : {}\nstandard deviation : {}\nmaximum point: {}\nminimum point: {}"
 	)
 # detection ... max has a problem ... standard deviation is more than mean with a long diff.
 # min equal zero and max 10568 which led to there's an error because week have 10080 mints < max !!!
+# Back to investigation ... 
+# student_detected = student_detection_problem(paid_student_engagement_first_week_total_mints)
+# account_key_detected = student_detected.pop()
+# print("student key {}".format(account_key_detected))
+# student_rows_detected = student_rows_total_mint_error(paid_student_engagement_first_week_groups[account_key_detected])
+# print("number of error rows : {}".format(len(student_rows_detected)))
+# No error in writing ... 
+# Display Data
+# print("number of error rows : {}".format(student_rows_detected))
+# Problem is here ..  maybe student cancel the enrollment then join again.
+# In this case the first date will be first join for him
