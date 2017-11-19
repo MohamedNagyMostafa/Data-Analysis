@@ -12,6 +12,12 @@ def parse_date(date):
 	else:
 		return dt.strptime(date, '%Y-%m-%d')
 
+def parse_num(data):
+	if data == '':
+		return None
+	else:
+		return int(data)
+
 def parse_state(state):
 	return state == 'True'
 
@@ -21,6 +27,8 @@ def parsing(data_list):
 		data['cancel_date'] = parse_date(data['cancel_date'])
 		data['is_udacity'] = parse_state(data['is_udacity'])
 		data['is_canceled'] = parse_state(data['is_canceled'])
+		data['days_to_cancel'] = parse_num(data['days_to_cancel'])
+		data['account_key'] = parse_num(data['account_key'])
 	return data_list
 
 def uniqueness_number(data_list):
@@ -59,6 +67,16 @@ def remove_udacity_accounts(enrollment):
 			enrollment_student.append(student)
 	return enrollment_student
 
+def filter_paid_student(enrollments):
+	paid_student = dict()
+	for student in enrollments:
+		if student['days_to_cancel'] == None or student['days_to_cancel'] > 7:
+			account_key = student['account_key']
+			join_date = student['join_date']
+			if not account_key in paid_student or join_date > paid_student[account_key]:
+				paid_student[student['account_key']] = student['join_date']
+	return paid_student
+
 # Wrangling Phase Ph.1
 enrollment = read_csv('E:\Data Analysis\c-ud170\enrollments.csv')
 daily_engagement = read_csv('E:\Data Analysis\c-ud170\daily_engagement.csv')
@@ -90,9 +108,18 @@ enrollment_student_not_engagement = undetected_rows(enrollment_uniqueness_studen
 
 #Checker investigation ansure
 enrollment_student_not_engagement_day = anssure_cancelating(enrollment_student_not_engagement)
-
+# expected result : 0
+# output: 3
+# then there's another error.
 print("Student With Diff {}".format(len(enrollment_student_not_engagement_day)))
 # Detect three student ... they were a vertual student so that their data has true in is_udacity
 # remove all udacity accounts.
 enrollments_not_udacity_accounts = remove_udacity_accounts(enrollment)
 # Inverstigation is done.
+# Result Enrollments List Without Virtual Udacity Accounts, Detect There are student unenrolled in course 
+# In the same day.
+
+# Exploration Phase 3.
+enrollments_paid_student = filter_paid_student(enrollments_not_udacity_accounts)
+print(len(enrollments_paid_student))
+
