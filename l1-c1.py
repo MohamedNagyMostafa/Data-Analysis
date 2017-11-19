@@ -1,4 +1,5 @@
 import unicodecsv
+import numpy as np
 from collections import defaultdict
 from datetime import datetime as dt
 
@@ -193,4 +194,15 @@ print("paid student number {}".format(len(paid_student_engagement_first_week_tot
 total_average_for_mints = total_average_for_mints(paid_student_engagement_first_week_total_mints)
 print("total average is : {} mintues".format(total_average_for_mints))
 # Also can use import numpy
+total_mints = list(paid_student_engagement_first_week_total_mints.values())
 # numpy.mean(paid_student_engagement_first_week_total_mints.values())
+print("mean : {}\nstandard deviation : {}\nmaximum point: {}\nminimum point: {}"
+	.format(
+		np.mean(total_mints),
+		np.std(total_mints),
+		np.max(total_mints),
+		np.min(total_mints)
+		)
+	)
+# detection ... max has a problem ... standard deviation is more than mean with a long diff.
+# min equal zero and max 10568 which led to there's an error because week have 10080 mints < max !!!
