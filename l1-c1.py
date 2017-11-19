@@ -369,12 +369,15 @@ print("non passed completed lessons in week:\nmean : {}, standard deviation : {}
 		 )
 	)
 #Ph4 visualizing data
-plt.plot(total_minutes_visited_passed_engagement)
-plt.plot(total_minutes_visited_non_passed_engagement)
+plt.hist(total_minutes_visited_passed_engagement)
+plt.figure() #separete hist
+plt.hist(total_minutes_visited_non_passed_engagement)
 plt.show()
-plt.plot(visited_classroom_passed)
-plt.plot(visited_classroom_non_passed)
+plt.hist(visited_classroom_passed)
+plt.figure() #separete hist
+plt.hist(visited_classroom_non_passed)
 plt.show()
-plt.plot(completed_lessons_passsed)
-plt.plot(completed_lessons_non_passed)
+plt.hist(completed_lessons_passsed)
+plt.figure() #separete hist
+plt.hist(completed_lessons_non_passed)
 plt.show()
