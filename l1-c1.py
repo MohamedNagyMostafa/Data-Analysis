@@ -1,4 +1,5 @@
 import unicodecsv
+from collections import defaultdict
 from datetime import datetime as dt
 
 def read_csv(file_path):
@@ -30,6 +31,7 @@ def parse_state(state):
 def parsing_engagement(data_list):
 	for data in data_list:
 		data['utc_date'] = parse_date_engagement(data['utc_date'])
+		data['total_minutes_visited'] = float(data['total_minutes_visited'])
 	return data_list
 
 def parsing_enrollment(data_list):
@@ -106,6 +108,27 @@ def filter_engagement_paid_first_week(paid_student, daily_engagement):
 			paid_student_first_week.append(student_engag)
 	return paid_student_first_week
 
+def break_to_student_data_group(student_data):
+	student_data_group = defaultdict(list)
+	for student in student_data:
+		account_key = student['account_key']
+		student_data_group[account_key].append(student)
+	return student_data_group
+
+def student_data_total_mints_group(data_group):
+	total_mints_group = dict()
+	for account_key, engagement_list in data_group.items():
+		total_mints = 0
+		for engagement in engagement_list:
+			total_mints = total_mints + engagement['total_minutes_visited']
+		total_mints_group[account_key] = total_mints
+	return total_mints_group
+
+def total_average_for_mints(student_data):
+	total_average = 0
+	for student_account in student_data:
+		total_average = total_average + student_data[student_account]
+	return total_average/ len(student_data)
 # Wrangling Phase Ph.1
 enrollment = read_csv('E:\Data Analysis\c-ud170\enrollments.csv')
 daily_engagement = read_csv('E:\Data Analysis\c-ud170\daily_engagement.csv')
@@ -157,4 +180,17 @@ print("paid students 'enrollment' : {}".format(len(enrollments_paid_student)))
 engagments_not_udacity_accounts = remove_udacity_accounts(daily_engagement, udacity_accounts)
 paid_student_engagement_first_week = filter_engagement_paid_first_week(enrollments_paid_student, engagments_not_udacity_accounts)
 
-print("paid student during first week {}".format(len(paid_student_engagement_first_week)))
+# Can make investigation on exploration data.
+# Ph3.3 get average mints spent during week.
+paid_student_engagement_first_week_groups = break_to_student_data_group(paid_student_engagement_first_week)
+# investigation... expected output 995 
+print("paid student number {}".format(len(paid_student_engagement_first_week_groups)))
+# resume exploration.
+paid_student_engagement_first_week_total_mints = student_data_total_mints_group(paid_student_engagement_first_week_groups)
+# investigation ... expected output 995
+print("paid student number {}".format(len(paid_student_engagement_first_week_total_mints)))
+
+total_average_for_mints = total_average_for_mints(paid_student_engagement_first_week_total_mints)
+print("total average is : {} mintues".format(total_average_for_mints))
+# Also can use import numpy
+# numpy.mean(paid_student_engagement_first_week_total_mints.values())
