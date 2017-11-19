@@ -187,9 +187,9 @@ def engagement_submission_project_groups(submissions_account_keys_set, project_s
 	for student_engagement in project_submissions_not_udacity_accounts:
 		account_key = student_engagement['account_key']
 		if account_key in submissions_account_keys_set:
-			passed_engagement.append(account_key)
+			passed_engagement.append(student_engagement)
 		else:
-			non_passing_engagement.append(account_key)
+			non_passing_engagement.append(student_engagement)
 	return passed_engagement, non_passing_engagement
 
 
@@ -307,3 +307,63 @@ project_submissions_not_udacity_accounts = remove_udacity_accounts(project_submi
 submissions_account_keys_set = account_keys_set_submission_lesson(project_submissions_not_udacity_accounts)
 passing_engagement, non_passing_engagement = engagement_submission_project_groups(submissions_account_keys_set, paid_student_engagement_first_week)
 print("passed {} non passed {}".format(len(passing_engagement), len(non_passing_engagement)))
+# Ph 3.7 Fully deep exploration.
+
+# Display Mintes 
+breaks_to_group_passed = break_to_student_data_group(passing_engagement)
+breaks_to_group_non_passed = break_to_student_data_group(non_passing_engagement)
+total_minutes_visited_passed_engagement = list(student_data_total_mints_group(breaks_to_group_passed).values())
+total_minutes_visited_non_passed_engagement = list(student_data_total_mints_group(breaks_to_group_non_passed).values())
+completed_lessons_passsed = student_first_week_complete_lessons(breaks_to_group_passed)
+completed_lessons_non_passed = student_first_week_complete_lessons(breaks_to_group_non_passed)
+visited_classroom_passed = student_first_week_visited_classroom(breaks_to_group_passed)
+visited_classroom_non_passed = student_first_week_visited_classroom(breaks_to_group_non_passed)
+
+print("passed mints in week:\nmean : {}, standard deviation : {}, max: {}, min: {}"
+	.format(
+		np.mean(total_minutes_visited_passed_engagement),
+		np.std(total_minutes_visited_passed_engagement),
+		 np.max(total_minutes_visited_passed_engagement),
+		 np.min(total_minutes_visited_passed_engagement) 
+		 )
+	)
+print("non passed mints in week:\nmean : {}, standard deviation : {}, max: {}, min: {}"
+	.format(
+		np.mean(total_minutes_visited_non_passed_engagement),
+		np.std(total_minutes_visited_non_passed_engagement),
+		 np.max(total_minutes_visited_non_passed_engagement),
+		 np.min(total_minutes_visited_non_passed_engagement) 
+		 )
+	)
+print("passed visited classroom in week:\nmean : {}, standard deviation : {}, max: {}, min: {}"
+	.format(
+		np.mean(visited_classroom_passed),
+		np.std(visited_classroom_passed),
+		 np.max(visited_classroom_passed),
+		 np.min(visited_classroom_passed) 
+		 )
+	)
+print("non passed visited classroom in week:\nmean : {}, standard deviation : {}, max: {}, min: {}"
+	.format(
+		np.mean(visited_classroom_non_passed),
+		np.std(visited_classroom_non_passed),
+		 np.max(visited_classroom_non_passed),
+		 np.min(visited_classroom_non_passed) 
+		 )
+	)
+print("passed completed lessons in week:\nmean : {}, standard deviation : {}, max: {}, min: {}"
+	.format(
+		np.mean(completed_lessons_passsed),
+		np.std(completed_lessons_passsed),
+		 np.max(completed_lessons_passsed),
+		 np.min(completed_lessons_passsed) 
+		 )
+	)
+print("non passed completed lessons in week:\nmean : {}, standard deviation : {}, max: {}, min: {}"
+	.format(
+		np.mean(completed_lessons_non_passed),
+		np.std(completed_lessons_non_passed),
+		 np.max(completed_lessons_non_passed),
+		 np.min(completed_lessons_non_passed) 
+		 )
+	)
