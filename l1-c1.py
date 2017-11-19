@@ -33,6 +33,7 @@ def parsing_engagement(data_list):
 	for data in data_list:
 		data['utc_date'] = parse_date_engagement(data['utc_date'])
 		data['total_minutes_visited'] = float(data['total_minutes_visited'])
+		data['lessons_completed'] = int(data['lessons_completed'])
 	return data_list
 
 def parsing_enrollment(data_list):
@@ -147,6 +148,16 @@ def student_rows_total_mint_error(paid_student_engagement_first_week_student):
 			error_rows.append(row)
 	return error_rows
 
+def student_first_week_complete_lessons(paid_student_engagement_first_week_groups):
+	completed_lessons = []
+	for account_key, days_list in paid_student_engagement_first_week_groups.items():
+		completed_lessons_in_week = 0
+		for day in days_list:
+			value = day['lessons_completed']
+			completed_lessons_in_week += value
+		completed_lessons.append(completed_lessons_in_week)
+	return completed_lessons
+
 # Wrangling Phase Ph.1
 enrollment = read_csv('E:\Data Analysis\c-ud170\enrollments.csv')
 daily_engagement = read_csv('E:\Data Analysis\c-ud170\daily_engagement.csv')
@@ -234,3 +245,14 @@ print("mean : {}\nstandard deviation : {}\nmaximum point: {}\nminimum point: {}"
 # print("number of error rows : {}".format(student_rows_detected))
 # Problem is here ..  maybe student cancel the enrollment then join again.
 # In this case the first date will be first join for him
+
+# Ph 3.4 Completed lessons in the first week.
+completed_lessons = student_first_week_complete_lessons(paid_student_engagement_first_week_groups)
+print("mean : {}, standard deviation : {}, max: {}, min: {}"
+	.format(
+		np.mean(completed_lessons),
+		np.std(completed_lessons),
+		 np.max(completed_lessons),
+		 np.min(completed_lessons) 
+		 )
+	)
