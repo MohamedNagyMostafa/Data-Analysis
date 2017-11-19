@@ -172,6 +172,27 @@ def student_first_week_visited_classroom(paid_student_engagement_first_week_grou
 		visited_classroom.append(visited_week)
 	return visited_classroom
 
+def account_keys_set_submission_lesson(project_submissions_not_udacity_accounts):
+	passed = {'PASSED', 'DISTINCTION'}
+	projects_ids = {'746169184', '3176718735'}
+	account_key_set = set()
+	for project_row in project_submissions_not_udacity_accounts:
+		if project_row['lesson_key'] in projects_ids and project_row['assigned_rating'] in passed:
+			account_key_set.add(project_row['account_key'])
+	return account_key_set
+
+def engagement_submission_project_groups(submissions_account_keys_set, project_submissions_not_udacity_accounts):
+	passed_engagement = []
+	non_passing_engagement = []
+	for student_engagement in project_submissions_not_udacity_accounts:
+		account_key = student_engagement['account_key']
+		if account_key in submissions_account_keys_set:
+			passed_engagement.append(account_key)
+		else:
+			non_passing_engagement.append(account_key)
+	return passed_engagement, non_passing_engagement
+
+
 # Wrangling Phase Ph.1
 enrollment = read_csv('E:\Data Analysis\c-ud170\enrollments.csv')
 daily_engagement = read_csv('E:\Data Analysis\c-ud170\daily_engagement.csv')
@@ -280,3 +301,9 @@ print("mean : {}, standard deviation : {}, max: {}, min: {}"
 		 np.min(visited_classroom) 
 		 )
 	)
+
+#Ph 3.6 Number of student passed first project.
+project_submissions_not_udacity_accounts = remove_udacity_accounts(project_submissions, udacity_accounts)
+submissions_account_keys_set = account_keys_set_submission_lesson(project_submissions_not_udacity_accounts)
+passing_engagement, non_passing_engagement = engagement_submission_project_groups(submissions_account_keys_set, paid_student_engagement_first_week)
+print("passed {} non passed {}".format(len(passing_engagement), len(non_passing_engagement)))
