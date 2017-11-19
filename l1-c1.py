@@ -122,4 +122,5 @@ enrollments_not_udacity_accounts = remove_udacity_accounts(enrollment)
 # Exploration Phase 3.
 enrollments_paid_student = filter_paid_student(enrollments_not_udacity_accounts)
 print(len(enrollments_paid_student))
+# Ph3.2
 
