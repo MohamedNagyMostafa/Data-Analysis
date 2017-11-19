@@ -34,6 +34,7 @@ def parsing_engagement(data_list):
 		data['utc_date'] = parse_date_engagement(data['utc_date'])
 		data['total_minutes_visited'] = float(data['total_minutes_visited'])
 		data['lessons_completed'] = int(data['lessons_completed'])
+		data['num_courses_visited'] = int(data['num_courses_visited'])
 	return data_list
 
 def parsing_enrollment(data_list):
@@ -158,6 +159,19 @@ def student_first_week_complete_lessons(paid_student_engagement_first_week_group
 		completed_lessons.append(completed_lessons_in_week)
 	return completed_lessons
 
+def student_first_week_visited_classroom(paid_student_engagement_first_week_groups):
+	visited_classroom = []
+	is_visited = 1
+	not_visited = 0
+	for account_key, days_list in paid_student_engagement_first_week_groups.items():
+		visited_week = 0
+		for day in days_list:
+			value = day['num_courses_visited']
+			if value > 0:
+				visited_week += is_visited				
+		visited_classroom.append(visited_week)
+	return visited_classroom
+
 # Wrangling Phase Ph.1
 enrollment = read_csv('E:\Data Analysis\c-ud170\enrollments.csv')
 daily_engagement = read_csv('E:\Data Analysis\c-ud170\daily_engagement.csv')
@@ -254,5 +268,15 @@ print("mean : {}, standard deviation : {}, max: {}, min: {}"
 		np.std(completed_lessons),
 		 np.max(completed_lessons),
 		 np.min(completed_lessons) 
+		 )
+	)
+#Ph 3.5 Number of days which class room is visited
+visited_classroom = student_first_week_visited_classroom(paid_student_engagement_first_week_groups)
+print("mean : {}, standard deviation : {}, max: {}, min: {}"
+	.format(
+		np.mean(visited_classroom),
+		np.std(visited_classroom),
+		 np.max(visited_classroom),
+		 np.min(visited_classroom) 
 		 )
 	)
