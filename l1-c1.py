@@ -1,4 +1,5 @@
 import unicodecsv
+import seaborn as sns #preatty plot
 import matplotlib.pyplot as plt
 import numpy as np
 from collections import defaultdict
@@ -369,11 +370,14 @@ print("non passed completed lessons in week:\nmean : {}, standard deviation : {}
 		 )
 	)
 #Ph4 visualizing data
+plt.title("mintues visited pass")
 plt.hist(total_minutes_visited_passed_engagement)
 plt.figure() #separete hist
+plt.title("mintues visited non pass")
+plt.xlabel("ddosdoa")
 plt.hist(total_minutes_visited_non_passed_engagement)
 plt.show()
-plt.hist(visited_classroom_passed)
+plt.hist(visited_classroom_passed, bins=8)
 plt.figure() #separete hist
 plt.hist(visited_classroom_non_passed)
 plt.show()
